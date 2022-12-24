@@ -3,13 +3,13 @@ package server
 import (
 	"context"
 
-	"github.com/youngjoon-lee/dkv/types"
+	pb "github.com/youngjoon-lee/dkv/pb/dkv/v0"
 )
 
 type GRPCServer struct {
-	types.UnimplementedGreeterServer
+	pb.UnimplementedGreeterServer
 }
 
-func (s *GRPCServer) SayHello(ctx context.Context, req *types.HelloRequest) (*types.HelloReply, error) {
+func (s *GRPCServer) SayHello(ctx context.Context, req *pb.HelloRequest) (*pb.HelloReply, error) {
 	return nil, nil
 }

@@ -1,10 +1,10 @@
 syntax = "proto3";
 
-option go_package = "github.com/youngjoon-lee/dkv/types";
+option go_package = "github.com/youngjoon-lee/dkv/pb/dkv/v0";
 
 //import "google/api/annotations.proto";
 
-//package dkv;
+package dkv.v0;
 
 // The greeting service definition.
 service Greeter {

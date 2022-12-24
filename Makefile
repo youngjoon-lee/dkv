@@ -1,7 +1,7 @@
 OUT_DIR = build
 OUT_BIN = dkv
 PROTO_DIR = proto
-PROTO_OUT_DIR = types
+PROTO_OUT_DIR = pb
 
 .PHONY: build install clean proto-gen proto-clean
 
@@ -23,7 +23,7 @@ proto-gen:
 		--grpc-gateway_opt logtostderr=true \
 		--grpc-gateway_opt paths=source_relative \
 		--grpc-gateway_opt generate_unbound_methods=true \
-        $(PROTO_DIR)/*.proto
+        $(PROTO_DIR)/dkv/v0/*.proto
 
 proto-clean:
 	rm -rf $(PROTO_OUT_DIR)

@@ -5,8 +5,8 @@ import (
 	"net"
 
 	log "github.com/sirupsen/logrus"
+	pb "github.com/youngjoon-lee/dkv/pb/dkv/v0"
 	"github.com/youngjoon-lee/dkv/server"
-	"github.com/youngjoon-lee/dkv/types"
 	"go.etcd.io/bbolt"
 	"google.golang.org/grpc"
 )
@@ -27,7 +27,7 @@ func main() {
 	}
 
 	grpcSvr := grpc.NewServer()
-	types.RegisterGreeterServer(grpcSvr, &server.GRPCServer{})
+	pb.RegisterGreeterServer(grpcSvr, &server.GRPCServer{})
 	log.Infof("gRPC server listening at %d...", port)
 	if err := grpcSvr.Serve(lis); err != nil {
 		log.Fatal(err)
