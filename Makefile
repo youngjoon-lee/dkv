@@ -17,7 +17,8 @@ clean:
 
 proto-gen:
 	mkdir -p $(PROTO_OUT_DIR)
-	protoc --proto_path=$(PROTO_DIR) --go_out=$(PROTO_OUT_DIR) --go_opt=paths=source_relative \
+	protoc --proto_path=$(PROTO_DIR) -I "third_party/proto" \
+		--go_out=$(PROTO_OUT_DIR) --go_opt=paths=source_relative \
         --go-grpc_out=$(PROTO_OUT_DIR) --go-grpc_opt=paths=source_relative \
         --grpc-gateway_out=$(PROTO_OUT_DIR) \
 		--grpc-gateway_opt logtostderr=true \
