@@ -38,7 +38,7 @@ func main() {
 	}
 
 	grpcSvr := grpc.NewServer()
-	pb.RegisterGreeterServer(grpcSvr, &server.GRPCServer{})
+	pb.RegisterKVStoreServer(grpcSvr, &server.GRPCServer{})
 	log.Infof("gRPC server listening at %d...", grpcPort)
 	go func() {
 		if err := grpcSvr.Serve(lis); err != nil {
@@ -48,7 +48,7 @@ func main() {
 
 	mux := runtime.NewServeMux()
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
-	err = pb.RegisterGreeterHandlerFromEndpoint(context.Background(), mux, fmt.Sprintf("localhost:%d", grpcPort), opts)
+	err = pb.RegisterKVStoreHandlerFromEndpoint(context.Background(), mux, fmt.Sprintf("localhost:%d", grpcPort), opts)
 	if err != nil {
 		log.Fatal(err)
 	}

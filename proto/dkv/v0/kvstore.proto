@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option go_package = "github.com/youngjoon-lee/dkv/pb/dkv/v0";
+
+import "google/api/annotations.proto";
+
+package dkv.v0;
+
+service KVStore {
+  rpc Set(SetRequest) returns (SetReply) {
+     option (google.api.http) = {
+       post: "/v0/kv"
+       body: "*"
+     };
+  }
+}
+
+message SetRequest {
+  bytes key = 1;
+  bytes value = 2;
+}
+
+message SetReply {
+  string message = 1;
+}
