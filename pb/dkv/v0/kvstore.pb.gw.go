@@ -31,8 +31,8 @@ var _ = runtime.String
 var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
-func request_KVStore_Set_0(ctx context.Context, marshaler runtime.Marshaler, client KVStoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq SetRequest
+func request_KVStore_Put_0(ctx context.Context, marshaler runtime.Marshaler, client KVStoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq PutRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -43,13 +43,13 @@ func request_KVStore_Set_0(ctx context.Context, marshaler runtime.Marshaler, cli
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := client.Set(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.Put(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_KVStore_Set_0(ctx context.Context, marshaler runtime.Marshaler, server KVStoreServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq SetRequest
+func local_request_KVStore_Put_0(ctx context.Context, marshaler runtime.Marshaler, server KVStoreServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq PutRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -60,7 +60,7 @@ func local_request_KVStore_Set_0(ctx context.Context, marshaler runtime.Marshale
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := server.Set(ctx, &protoReq)
+	msg, err := server.Put(ctx, &protoReq)
 	return msg, metadata, err
 
 }
@@ -71,7 +71,7 @@ func local_request_KVStore_Set_0(ctx context.Context, marshaler runtime.Marshale
 // Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterKVStoreHandlerFromEndpoint instead.
 func RegisterKVStoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, server KVStoreServer) error {
 
-	mux.Handle("POST", pattern_KVStore_Set_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_KVStore_Put_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -79,12 +79,12 @@ func RegisterKVStoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/dkv.v0.KVStore/Set", runtime.WithHTTPPathPattern("/v0/kv"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/dkv.v0.KVStore/Put", runtime.WithHTTPPathPattern("/v0/kv"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_KVStore_Set_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_KVStore_Put_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -92,7 +92,7 @@ func RegisterKVStoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 			return
 		}
 
-		forward_KVStore_Set_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KVStore_Put_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -137,25 +137,25 @@ func RegisterKVStoreHandler(ctx context.Context, mux *runtime.ServeMux, conn *gr
 // "KVStoreClient" to call the correct interceptors.
 func RegisterKVStoreHandlerClient(ctx context.Context, mux *runtime.ServeMux, client KVStoreClient) error {
 
-	mux.Handle("POST", pattern_KVStore_Set_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_KVStore_Put_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/dkv.v0.KVStore/Set", runtime.WithHTTPPathPattern("/v0/kv"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/dkv.v0.KVStore/Put", runtime.WithHTTPPathPattern("/v0/kv"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_KVStore_Set_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_KVStore_Put_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_KVStore_Set_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KVStore_Put_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -163,9 +163,9 @@ func RegisterKVStoreHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 }
 
 var (
-	pattern_KVStore_Set_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v0", "kv"}, ""))
+	pattern_KVStore_Put_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v0", "kv"}, ""))
 )
 
 var (
-	forward_KVStore_Set_0 = runtime.ForwardResponseMessage
+	forward_KVStore_Put_0 = runtime.ForwardResponseMessage
 )

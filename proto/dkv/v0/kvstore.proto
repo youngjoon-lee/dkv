@@ -7,7 +7,7 @@ import "google/api/annotations.proto";
 package dkv.v0;
 
 service KVStore {
-  rpc Set(SetRequest) returns (SetReply) {
+  rpc Put(PutRequest) returns (PutReply) {
      option (google.api.http) = {
        post: "/v0/kv"
        body: "*"
@@ -15,11 +15,11 @@ service KVStore {
   }
 }
 
-message SetRequest {
+message PutRequest {
   bytes key = 1;
   bytes value = 2;
 }
 
-message SetReply {
+message PutReply {
   string message = 1;
 }
