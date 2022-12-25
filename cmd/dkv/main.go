@@ -5,6 +5,10 @@ import (
 	"fmt"
 	"net"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	log "github.com/sirupsen/logrus"
@@ -22,7 +26,10 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.Close()
+	defer func() {
+		log.Info("closing BoltDB...")
+		db.Close()
+	}()
 
 	grpcPort := 8080
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", grpcPort))
@@ -46,10 +53,24 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Start HTTP server (and proxy calls to gRPC server endpoint)
 	httpPort := grpcPort + 1
 	log.Infof("HTTP server listening at %d...", httpPort)
-	if err := http.ListenAndServe(fmt.Sprintf(":%d", httpPort), mux); err != nil {
-		log.Fatal(err)
+	go func() {
+		if err := http.ListenAndServe(fmt.Sprintf(":%d", httpPort), mux); err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	sigCh := make(chan os.Signal, 1)
+	signal.Notify(sigCh, syscall.SIGTERM, syscall.SIGINT)
+
+	select {
+	case <-sigCh:
+		log.Info("signal detected. starting graceful shutdown...")
 	}
+
+	_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	//TODO: do something with ctx
 }
