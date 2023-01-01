@@ -36,6 +36,9 @@ func New(nodeID string, nodes []*pb.Node) (*Cluster, error) {
 }
 
 func (c *Cluster) IsLeader() bool {
+	c.mutex.RLock()
+	defer c.mutex.RUnlock()
+
 	return c.nodeID == c.cluster.Leader.Id
 }
 
