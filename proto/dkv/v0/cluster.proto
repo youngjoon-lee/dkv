@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option go_package = "github.com/youngjoon-lee/dkv/pb/dkv/v0";
+
+import "google/api/annotations.proto";
+
+package dkv.v0;
+
+service ClusterService {
+  rpc Status(StatusRequest) returns (StatusReply) {
+    option (google.api.http) = {
+      get: "/v0/cluster/status"
+    };
+  }
+}
+
+message Cluster {
+  Node leader = 1;
+  map<string, Node> followers = 2;
+}
+
+message Node {
+  string id = 1;
+  string addr = 2;
+}
+
+message StatusRequest {}
+
+message StatusReply {
+  string node_id = 1;
+  Cluster cluster = 2;
+}
