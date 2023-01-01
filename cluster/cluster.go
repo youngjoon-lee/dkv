@@ -15,7 +15,7 @@ type Cluster struct {
 	cluster *pb.Cluster
 }
 
-func NewClusterMap(nodeID string, nodes []*pb.Node) (*Cluster, error) {
+func New(nodeID string, nodes []*pb.Node) (*Cluster, error) {
 	if len(nodes) == 0 {
 		return nil, fmt.Errorf("no node specified")
 	}
@@ -43,7 +43,7 @@ func (c *Cluster) NodeID() string {
 	return c.nodeID
 }
 
-func (c *Cluster) ClusterInfo() *pb.Cluster {
+func (c *Cluster) Status() *pb.Cluster {
 	c.mutex.RLock()
 	defer c.mutex.RUnlock()
 

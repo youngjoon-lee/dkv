@@ -11,10 +11,10 @@ import (
 )
 
 type App struct {
-	conf       config.Config
-	db         db.DB
-	clusterMap *cluster.Cluster
-	rpcSvr     rpc.Server
+	conf    config.Config
+	db      db.DB
+	cluster *cluster.Cluster
+	rpcSvr  rpc.Server
 }
 
 func New(conf config.Config) (*App, error) {
@@ -23,24 +23,24 @@ func New(conf config.Config) (*App, error) {
 		return nil, fmt.Errorf("failed to init DB: %w", err)
 	}
 
-	clusterMap, err := cluster.NewClusterMap(conf.NodeID, conf.Cluster)
+	cluster, err := cluster.New(conf.NodeID, conf.Cluster)
 	if err != nil {
 		db.Close()
 		return nil, fmt.Errorf("failed to init cluster info: %w", err)
 	}
-	log.Debugf("cluster info initialized: %v", clusterMap.ClusterInfo())
+	log.Debugf("cluster info initialized: %v", cluster.Status())
 
-	rpcSvr, err := rpc.Serve(conf.RPCPort, conf.RESTPort, db, clusterMap)
+	rpcSvr, err := rpc.Serve(conf.RPCPort, conf.RESTPort, db, cluster)
 	if err != nil {
 		db.Close()
 		return nil, fmt.Errorf("failed to serve RPC: %w", err)
 	}
 
 	return &App{
-		conf:       conf,
-		db:         db,
-		clusterMap: clusterMap,
-		rpcSvr:     rpcSvr,
+		conf:    conf,
+		db:      db,
+		cluster: cluster,
+		rpcSvr:  rpcSvr,
 	}, nil
 }
 

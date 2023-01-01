@@ -19,8 +19,8 @@ type Server interface {
 	GracefulStop()
 }
 
-func Serve(rpcPort, restPort int, db db.DB, clusterMap *cluster.Cluster) (Server, error) {
-	grpcSvr, err := serveGRPC(rpcPort, db, clusterMap)
+func Serve(rpcPort, restPort int, db db.DB, cluster *cluster.Cluster) (Server, error) {
+	grpcSvr, err := serveGRPC(rpcPort, db, cluster)
 	if err != nil {
 		return nil, fmt.Errorf("failed to serve gRPC server: %w", err)
 	}
@@ -33,10 +33,10 @@ func Serve(rpcPort, restPort int, db db.DB, clusterMap *cluster.Cluster) (Server
 	return grpcSvr, nil
 }
 
-func serveGRPC(port int, db db.DB, clusterMap *cluster.Cluster) (*grpc.Server, error) {
+func serveGRPC(port int, db db.DB, cluster *cluster.Cluster) (*grpc.Server, error) {
 	svr := grpc.NewServer()
 	pb.RegisterKVStoreServer(svr, &kvStoreServer{db: db})
-	pb.RegisterClusterServiceServer(svr, &clusterServiceServer{clusterMap: clusterMap})
+	pb.RegisterClusterServiceServer(svr, &clusterServiceServer{cluster: cluster})
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {

@@ -10,12 +10,12 @@ import (
 type clusterServiceServer struct {
 	pb.UnimplementedClusterServiceServer
 
-	clusterMap *cluster.Cluster
+	cluster *cluster.Cluster
 }
 
 func (s *clusterServiceServer) Status(ctx context.Context, req *pb.StatusRequest) (*pb.StatusReply, error) {
 	return &pb.StatusReply{
-		NodeId:  s.clusterMap.NodeID(),
-		Cluster: s.clusterMap.ClusterInfo(),
+		NodeId:  s.cluster.NodeID(),
+		Cluster: s.cluster.Status(),
 	}, nil
 }
