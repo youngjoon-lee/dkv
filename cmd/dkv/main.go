@@ -7,8 +7,8 @@ import (
 
 	"github.com/kelseyhightower/envconfig"
 	log "github.com/sirupsen/logrus"
+	"github.com/youngjoon-lee/dkv/app"
 	"github.com/youngjoon-lee/dkv/config"
-	"github.com/youngjoon-lee/dkv/service"
 )
 
 const (
@@ -26,11 +26,11 @@ func main() {
 	initLogger(log.Level(conf.LogLevel))
 	log.Debugf("config: %v", conf)
 
-	svc, err := service.New(conf)
+	app, err := app.New(conf)
 	if err != nil {
-		log.Fatalf("failed to init service: %v", err)
+		log.Fatalf("failed to init app: %v", err)
 	}
-	defer svc.Close()
+	defer app.Close()
 
 	sigCh := make(chan os.Signal, 1)
 	signal.Notify(sigCh, syscall.SIGTERM, syscall.SIGINT)

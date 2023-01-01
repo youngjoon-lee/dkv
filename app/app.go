@@ -1,4 +1,4 @@
-package service
+package app
 
 import (
 	"fmt"
@@ -10,14 +10,14 @@ import (
 	"github.com/youngjoon-lee/dkv/rpc"
 )
 
-type Service struct {
+type App struct {
 	conf       config.Config
 	db         db.DB
 	clusterMap *cluster.Cluster
 	rpcSvr     rpc.Server
 }
 
-func New(conf config.Config) (*Service, error) {
+func New(conf config.Config) (*App, error) {
 	db, err := db.NewBoltDB(conf.DBPath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to init DB: %w", err)
@@ -36,7 +36,7 @@ func New(conf config.Config) (*Service, error) {
 		return nil, fmt.Errorf("failed to serve RPC: %w", err)
 	}
 
-	return &Service{
+	return &App{
 		conf:       conf,
 		db:         db,
 		clusterMap: clusterMap,
@@ -44,7 +44,7 @@ func New(conf config.Config) (*Service, error) {
 	}, nil
 }
 
-func (s Service) Close() {
+func (s *App) Close() {
 	log.Info("closing RPC...")
 	s.rpcSvr.GracefulStop()
 

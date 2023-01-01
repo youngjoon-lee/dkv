@@ -18,7 +18,7 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// KVStoreClient is the client API for KVStore service.
+// KVStoreClient is the client API for KVStore app.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type KVStoreClient interface {
@@ -42,7 +42,7 @@ func (c *kVStoreClient) Put(ctx context.Context, in *PutRequest, opts ...grpc.Ca
 	return out, nil
 }
 
-// KVStoreServer is the server API for KVStore service.
+// KVStoreServer is the server API for KVStore app.
 // All implementations must embed UnimplementedKVStoreServer
 // for forward compatibility
 type KVStoreServer interface {
@@ -59,7 +59,7 @@ func (UnimplementedKVStoreServer) Put(context.Context, *PutRequest) (*PutReply, 
 }
 func (UnimplementedKVStoreServer) mustEmbedUnimplementedKVStoreServer() {}
 
-// UnsafeKVStoreServer may be embedded to opt out of forward compatibility for this service.
+// UnsafeKVStoreServer may be embedded to opt out of forward compatibility for this app.
 // Use of this interface is not recommended, as added methods to KVStoreServer will
 // result in compilation errors.
 type UnsafeKVStoreServer interface {
@@ -88,7 +88,7 @@ func _KVStore_Put_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
-// KVStore_ServiceDesc is the grpc.ServiceDesc for KVStore service.
+// KVStore_ServiceDesc is the grpc.ServiceDesc for KVStore app.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var KVStore_ServiceDesc = grpc.ServiceDesc{

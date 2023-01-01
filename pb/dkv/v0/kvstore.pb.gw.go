@@ -65,7 +65,7 @@ func local_request_KVStore_Put_0(ctx context.Context, marshaler runtime.Marshale
 
 }
 
-// RegisterKVStoreHandlerServer registers the http handlers for service KVStore to "mux".
+// RegisterKVStoreHandlerServer registers the http handlers for app KVStore to "mux".
 // UnaryRPC     :call KVStoreServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
 // Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterKVStoreHandlerFromEndpoint instead.
@@ -124,13 +124,13 @@ func RegisterKVStoreHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeM
 	return RegisterKVStoreHandler(ctx, mux, conn)
 }
 
-// RegisterKVStoreHandler registers the http handlers for service KVStore to "mux".
+// RegisterKVStoreHandler registers the http handlers for app KVStore to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
 func RegisterKVStoreHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
 	return RegisterKVStoreHandlerClient(ctx, mux, NewKVStoreClient(conn))
 }
 
-// RegisterKVStoreHandlerClient registers the http handlers for service KVStore
+// RegisterKVStoreHandlerClient registers the http handlers for app KVStore
 // to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "KVStoreClient".
 // Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "KVStoreClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
