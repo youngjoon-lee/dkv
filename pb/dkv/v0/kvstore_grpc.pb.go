@@ -18,11 +18,12 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// KVStoreClient is the client API for KVStore app.
+// KVStoreClient is the client API for KVStore service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type KVStoreClient interface {
 	Put(ctx context.Context, in *PutRequest, opts ...grpc.CallOption) (*PutReply, error)
+	Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetReply, error)
 }
 
 type kVStoreClient struct {
@@ -42,11 +43,21 @@ func (c *kVStoreClient) Put(ctx context.Context, in *PutRequest, opts ...grpc.Ca
 	return out, nil
 }
 
-// KVStoreServer is the server API for KVStore app.
+func (c *kVStoreClient) Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetReply, error) {
+	out := new(GetReply)
+	err := c.cc.Invoke(ctx, "/dkv.v0.KVStore/Get", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// KVStoreServer is the server API for KVStore service.
 // All implementations must embed UnimplementedKVStoreServer
 // for forward compatibility
 type KVStoreServer interface {
 	Put(context.Context, *PutRequest) (*PutReply, error)
+	Get(context.Context, *GetRequest) (*GetReply, error)
 	mustEmbedUnimplementedKVStoreServer()
 }
 
@@ -57,9 +68,12 @@ type UnimplementedKVStoreServer struct {
 func (UnimplementedKVStoreServer) Put(context.Context, *PutRequest) (*PutReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Put not implemented")
 }
+func (UnimplementedKVStoreServer) Get(context.Context, *GetRequest) (*GetReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
+}
 func (UnimplementedKVStoreServer) mustEmbedUnimplementedKVStoreServer() {}
 
-// UnsafeKVStoreServer may be embedded to opt out of forward compatibility for this app.
+// UnsafeKVStoreServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to KVStoreServer will
 // result in compilation errors.
 type UnsafeKVStoreServer interface {
@@ -88,7 +102,25 @@ func _KVStore_Put_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
-// KVStore_ServiceDesc is the grpc.ServiceDesc for KVStore app.
+func _KVStore_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KVStoreServer).Get(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/dkv.v0.KVStore/Get",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KVStoreServer).Get(ctx, req.(*GetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// KVStore_ServiceDesc is the grpc.ServiceDesc for KVStore service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var KVStore_ServiceDesc = grpc.ServiceDesc{
@@ -98,6 +130,10 @@ var KVStore_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Put",
 			Handler:    _KVStore_Put_Handler,
+		},
+		{
+			MethodName: "Get",
+			Handler:    _KVStore_Get_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

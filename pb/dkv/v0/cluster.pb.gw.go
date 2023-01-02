@@ -49,7 +49,7 @@ func local_request_ClusterService_Status_0(ctx context.Context, marshaler runtim
 
 }
 
-// RegisterClusterServiceHandlerServer registers the http handlers for app ClusterService to "mux".
+// RegisterClusterServiceHandlerServer registers the http handlers for service ClusterService to "mux".
 // UnaryRPC     :call ClusterServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
 // Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterClusterServiceHandlerFromEndpoint instead.
@@ -108,13 +108,13 @@ func RegisterClusterServiceHandlerFromEndpoint(ctx context.Context, mux *runtime
 	return RegisterClusterServiceHandler(ctx, mux, conn)
 }
 
-// RegisterClusterServiceHandler registers the http handlers for app ClusterService to "mux".
+// RegisterClusterServiceHandler registers the http handlers for service ClusterService to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
 func RegisterClusterServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
 	return RegisterClusterServiceHandlerClient(ctx, mux, NewClusterServiceClient(conn))
 }
 
-// RegisterClusterServiceHandlerClient registers the http handlers for app ClusterService
+// RegisterClusterServiceHandlerClient registers the http handlers for service ClusterService
 // to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "ClusterServiceClient".
 // Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "ClusterServiceClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in

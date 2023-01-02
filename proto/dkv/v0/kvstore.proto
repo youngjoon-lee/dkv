@@ -13,6 +13,12 @@ service KVStore {
        body: "*"
      };
   }
+
+  rpc Get(GetRequest) returns (GetReply) {
+    option (google.api.http) = {
+      get: "/v0/kv/key/{key}"
+    };
+  }
 }
 
 message PutRequest {
@@ -22,4 +28,13 @@ message PutRequest {
 
 message PutReply {
   string message = 1;
+}
+
+message GetRequest {
+  bytes key = 1;
+}
+
+message GetReply {
+  bytes key = 1;
+  bytes value = 2;
 }

@@ -8,6 +8,8 @@ import (
 	"github.com/youngjoon-lee/dkv/cluster"
 	"github.com/youngjoon-lee/dkv/db"
 	pb "github.com/youngjoon-lee/dkv/pb/dkv/v0"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type kvStoreServer struct {
@@ -27,4 +29,17 @@ func (s *kvStoreServer) Put(ctx context.Context, req *pb.PutRequest) (*pb.PutRep
 		return nil, fmt.Errorf("failed to put: %w", err)
 	}
 	return &pb.PutReply{Message: "success"}, nil
+}
+
+func (s *kvStoreServer) Get(ctx context.Context, req *pb.GetRequest) (*pb.GetReply, error) {
+	log.Debugf("received a Get operation. key:%v(%s)", req.Key, string(req.Key))
+	value, err := s.db.Get(req.Key)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get value from db: %w", err)
+	}
+	if value == nil {
+		return nil, status.Errorf(codes.NotFound, "key is not found in the DB")
+	}
+
+	return &pb.GetReply{Key: req.Key, Value: value}, nil
 }

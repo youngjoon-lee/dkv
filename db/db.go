@@ -62,7 +62,12 @@ func (b boltDB) Get(key []byte) ([]byte, error) {
 	err := b.db.View(func(tx *bbolt.Tx) error {
 		bucket := tx.Bucket(b.bucketName)
 		value := bucket.Get(key)
-		out = make([]byte, 0, len(value))
+		if value == nil {
+			out = nil
+			return nil
+		}
+
+		out = make([]byte, len(value))
 		copy(out, value)
 		return nil
 	})

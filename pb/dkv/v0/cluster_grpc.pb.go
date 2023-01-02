@@ -18,7 +18,7 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// ClusterServiceClient is the client API for ClusterService app.
+// ClusterServiceClient is the client API for ClusterService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ClusterServiceClient interface {
@@ -42,7 +42,7 @@ func (c *clusterServiceClient) Status(ctx context.Context, in *StatusRequest, op
 	return out, nil
 }
 
-// ClusterServiceServer is the server API for ClusterService app.
+// ClusterServiceServer is the server API for ClusterService service.
 // All implementations must embed UnimplementedClusterServiceServer
 // for forward compatibility
 type ClusterServiceServer interface {
@@ -59,7 +59,7 @@ func (UnimplementedClusterServiceServer) Status(context.Context, *StatusRequest)
 }
 func (UnimplementedClusterServiceServer) mustEmbedUnimplementedClusterServiceServer() {}
 
-// UnsafeClusterServiceServer may be embedded to opt out of forward compatibility for this app.
+// UnsafeClusterServiceServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to ClusterServiceServer will
 // result in compilation errors.
 type UnsafeClusterServiceServer interface {
@@ -88,7 +88,7 @@ func _ClusterService_Status_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-// ClusterService_ServiceDesc is the grpc.ServiceDesc for ClusterService app.
+// ClusterService_ServiceDesc is the grpc.ServiceDesc for ClusterService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var ClusterService_ServiceDesc = grpc.ServiceDesc{
