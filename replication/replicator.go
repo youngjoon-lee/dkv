@@ -1,6 +1,7 @@
 package replication
 
 import (
+	"fmt"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -33,18 +34,10 @@ func (r *Replicator) start() {
 		case <-r.stopCh:
 			r.stopCh <- struct{}{}
 		default:
-			// TODO: replicate logs to followers
-
-			from := r.state.LastCommitted() + 1
-			iter := r.wal.Iterate(from, wal.NilSequence)
-			lastCommitted, err := r.state.Commit(iter)
-			if err != nil {
-				log.Errorf("failed to commit: %v", err)
-			} else if from <= lastCommitted {
-				log.Debugf("committed to seq %v~%v", from, lastCommitted)
+			if err := r.runIteration(); err != nil {
+				log.Error(err)
 			}
-
-			time.Sleep(1 * time.Second)
+			time.Sleep(100 * time.Millisecond)
 		}
 	}
 }
@@ -52,4 +45,20 @@ func (r *Replicator) start() {
 func (r *Replicator) Stop() {
 	r.stopCh <- struct{}{}
 	<-r.stopCh
+}
+
+func (r *Replicator) runIteration() error {
+	// TODO: replicate logs to followers
+
+	from := r.state.LastCommitted() + 1
+	iter := r.wal.Iterate(from, wal.NilSequence)
+
+	lastCommitted, err := r.state.Commit(iter)
+	if err != nil {
+		return fmt.Errorf("failed to commit: %w", err)
+	} else if from <= lastCommitted {
+		log.Debugf("committed to seq %v~%v", from, lastCommitted)
+	}
+
+	return nil
 }
