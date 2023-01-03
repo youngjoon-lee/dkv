@@ -7,7 +7,7 @@ import (
 type WAL interface {
 	Append(msg *pb.PutRequest, doneCh chan<- error) (Sequence, error)
 	AppendWith(seq Sequence, msg *pb.PutRequest) error
-	Iterate(fromSeq Sequence) Iterator
+	Iterate(fromSeq, toSeq Sequence) Iterator
 	Latest() *Element
 }
 

@@ -33,7 +33,7 @@ func (r *Replicator) start() {
 		case <-r.stopCh:
 			r.stopCh <- struct{}{}
 		default:
-			iter := r.wal.Iterate(r.state.LastCommitted() + 1)
+			iter := r.wal.Iterate(r.state.LastCommitted()+1, wal.NilSequence)
 			if iter == nil { // nothing to iterate
 				time.Sleep(100 * time.Millisecond)
 				continue

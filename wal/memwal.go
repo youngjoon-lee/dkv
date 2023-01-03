@@ -61,13 +61,13 @@ func (w *memWAL) AppendWith(seq Sequence, message *pb.PutRequest) error {
 	return nil
 }
 
-func (w *memWAL) Iterate(from Sequence) Iterator {
+func (w *memWAL) Iterate(from, to Sequence) Iterator {
 	w.mu.RLock()
 	defer w.mu.RUnlock()
 
 	for i, elem := range w.logs {
 		if elem.Seq >= from {
-			return newMemWALIterator(w, i)
+			return newMemWALIterator(w, i, to)
 		}
 	}
 	return nil
@@ -85,12 +85,14 @@ var _ Iterator = (*memWALIterator)(nil)
 type memWALIterator struct {
 	wal     *memWAL
 	nextIdx int
+	toSeq   Sequence
 }
 
-func newMemWALIterator(wal *memWAL, fromIdx int) *memWALIterator {
+func newMemWALIterator(wal *memWAL, fromIdx int, toSeq Sequence) *memWALIterator {
 	return &memWALIterator{
 		wal:     wal,
 		nextIdx: fromIdx,
+		toSeq:   toSeq,
 	}
 }
 
@@ -101,6 +103,9 @@ func (m *memWALIterator) Next() *Element {
 	//TODO: handle the case when logs are truncated
 	if m.nextIdx < len(m.wal.logs) {
 		elem := m.wal.logs[m.nextIdx]
+		if m.toSeq != NilSequence && elem.Seq > m.toSeq {
+			return nil
+		}
 		m.nextIdx++
 		return elem
 	}
