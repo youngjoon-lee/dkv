@@ -39,6 +39,10 @@ func (s *State) Commit(iter wal.Iterator) (wal.Sequence, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
+	if iter == nil {
+		return s.lastCommitted, nil
+	}
+
 	for {
 		elem := iter.Next()
 		if elem == nil {

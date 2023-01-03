@@ -33,19 +33,18 @@ func (r *Replicator) start() {
 		case <-r.stopCh:
 			r.stopCh <- struct{}{}
 		default:
-			iter := r.wal.Iterate(r.state.LastCommitted()+1, wal.NilSequence)
-			if iter == nil { // nothing to iterate
-				time.Sleep(100 * time.Millisecond)
-				continue
-			}
-
 			// TODO: replicate logs to followers
 
+			from := r.state.LastCommitted() + 1
+			iter := r.wal.Iterate(from, wal.NilSequence)
 			lastCommitted, err := r.state.Commit(iter)
 			if err != nil {
 				log.Errorf("failed to commit: %v", err)
+			} else if from <= lastCommitted {
+				log.Debugf("committed to seq %v~%v", from, lastCommitted)
 			}
-			log.Debugf("committed to seq %v", lastCommitted)
+
+			time.Sleep(1 * time.Second)
 		}
 	}
 }
