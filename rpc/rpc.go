@@ -9,8 +9,9 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	log "github.com/sirupsen/logrus"
 	"github.com/youngjoon-lee/dkv/cluster"
-	"github.com/youngjoon-lee/dkv/db"
 	pb "github.com/youngjoon-lee/dkv/pb/dkv/v0"
+	"github.com/youngjoon-lee/dkv/state"
+	"github.com/youngjoon-lee/dkv/wal"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -19,8 +20,8 @@ type Server interface {
 	GracefulStop()
 }
 
-func Serve(rpcPort, restPort int, db db.DB, cluster *cluster.Cluster) (Server, error) {
-	grpcSvr, err := serveGRPC(rpcPort, db, cluster)
+func Serve(rpcPort, restPort int, wal wal.WAL, state *state.State, cluster *cluster.Cluster) (Server, error) {
+	grpcSvr, err := serveGRPC(rpcPort, wal, state, cluster)
 	if err != nil {
 		return nil, fmt.Errorf("failed to serve gRPC server: %w", err)
 	}
@@ -33,9 +34,9 @@ func Serve(rpcPort, restPort int, db db.DB, cluster *cluster.Cluster) (Server, e
 	return grpcSvr, nil
 }
 
-func serveGRPC(port int, db db.DB, cluster *cluster.Cluster) (*grpc.Server, error) {
+func serveGRPC(port int, wal wal.WAL, state *state.State, cluster *cluster.Cluster) (*grpc.Server, error) {
 	svr := grpc.NewServer()
-	pb.RegisterKVStoreServer(svr, &kvStoreServer{db: db, cluster: cluster})
+	pb.RegisterKVStoreServer(svr, &kvStoreServer{wal: wal, state: state, cluster: cluster})
 	pb.RegisterClusterServiceServer(svr, &clusterServiceServer{cluster: cluster})
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))

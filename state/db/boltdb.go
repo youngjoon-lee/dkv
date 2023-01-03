@@ -6,12 +6,6 @@ import (
 	"go.etcd.io/bbolt"
 )
 
-type DB interface {
-	Close()
-	Put(key, value []byte) error
-	Get(key []byte) ([]byte, error)
-}
-
 type boltDB struct {
 	db         *bbolt.DB
 	bucketName []byte
