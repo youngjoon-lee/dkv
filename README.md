@@ -104,6 +104,10 @@ make build
 ```
 This will build a `dkv` binary in the `./build` directory.
 
+### Architecture
+
+![](./docs/images/dkv.drawio.png)
+
 ### Development Roadmap
 
 | Topic                                                     | Status |
