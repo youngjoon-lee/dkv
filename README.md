@@ -84,7 +84,7 @@ These key and value are decoded internally and stored in the DB as a byte array 
 
 Users can send a HTTP GET request to any of leader and follower nodes to query a value corresponding to a key. 
 ```bash
-curl -X GET localhost:9081/v0/kv/key/aGVsbG8=
+curl -X GET localhost:9091/v0/kv/key/aGVsbG8=
 ```
 
 
