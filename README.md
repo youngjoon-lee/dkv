@@ -109,10 +109,10 @@ This will build a `dkv` binary in the `./build` directory.
 | Topic                                                     | Status |
 |-----------------------------------------------------------|--------|
 | Basic storage features using BoltDB                       | Done   |
-| Basic (Non-fault-torelant) replication with in-memory WAL | WIP    |
+| Basic (Non-fault-tolerant) replication with in-memory WAL | WIP    |
 | Persistent WAL                                            | TBD    |
-| Fault-torelant replication (follower failures)            | TBD    | 
-| Fault-torelant replication (leader failures)              | TBD    | 
+| Fault-tolerant replication (follower failures)            | TBD    | 
+| Fault-tolerant replication (leader failures)              | TBD    | 
 | Dynamic cluster configuration (adding/removing followers) | TBD    | 
 | WAL compaction                                            | TBD    |
 
