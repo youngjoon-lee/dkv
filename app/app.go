@@ -38,7 +38,7 @@ func New(conf config.Config) (*App, error) {
 	var replicator *replication.Replicator
 	if cluster.IsLeader() {
 		log.Info("starting replicator as a leader...")
-		replicator = replication.NewReplicator(wal, state)
+		replicator = replication.NewReplicator(wal, state, cluster)
 	}
 
 	rpcSvr, err := rpc.Serve(conf.RPCPort, conf.RESTPort, wal, state, cluster)

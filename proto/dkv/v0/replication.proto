@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+option go_package = "github.com/youngjoon-lee/dkv/pb/dkv/v0";
+
+import "dkv/v0/kvstore.proto";
+
+package dkv.v0;
+
+service Replication {
+  rpc AppendLogs(stream AppendLogRequest) returns (AppendLogsReply) {}
+  rpc Commit(CommitRequest) returns (CommitReply) {}
+}
+
+message AppendLogRequest {
+  uint64 sequence = 1;
+  PutRequest msg = 2;
+}
+
+message AppendLogsReply {
+  uint64 last_appended_seq = 1;
+}
+
+message CommitRequest {
+  uint64 to_sequence = 1;
+}
+
+message CommitReply {
+  uint64 last_committed_seq = 1;
+}

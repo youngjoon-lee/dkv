@@ -37,6 +37,7 @@ func Serve(rpcPort, restPort int, wal wal.WAL, state *state.State, cluster *clus
 func serveGRPC(port int, wal wal.WAL, state *state.State, cluster *cluster.Cluster) (*grpc.Server, error) {
 	svr := grpc.NewServer()
 	pb.RegisterKVStoreServer(svr, &kvStoreServer{wal: wal, state: state, cluster: cluster})
+	pb.RegisterReplicationServer(svr, &replicationServer{wal: wal, state: state, cluster: cluster})
 	pb.RegisterClusterServiceServer(svr, &clusterServiceServer{cluster: cluster})
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
