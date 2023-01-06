@@ -113,7 +113,7 @@ This will build a `dkv` binary in the `./build` directory.
 | Topic                                                     | Status |
 |-----------------------------------------------------------|--------|
 | Basic storage features using BoltDB                       | Done   |
-| Basic (Non-fault-tolerant) replication with in-memory WAL | WIP    |
+| Basic (Non-fault-tolerant) replication with in-memory WAL | Done   |
 | Persistent WAL                                            | TBD    |
 | Fault-tolerant replication (follower failures)            | TBD    | 
 | Fault-tolerant replication (leader failures)              | TBD    | 
